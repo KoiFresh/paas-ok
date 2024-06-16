@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2 id="getting-started">
-      <UIcon name="i-heroicons-rocket-launch" /> Getting Started
+      <UIcon name="i-heroicons-rocket-launch" />
+      Getting Started
     </h2>
     <span>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
@@ -14,5 +15,11 @@
       Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor
       sit amet.
     </span>
+    <div class="mt-6">
+      <UButton>
+        <UIcon name="i-heroicons-cube" />
+        <NuxtLink to="/contact"> Contact Us</NuxtLink>
+      </UButton>
+    </div>
   </div>
 </template>

@@ -7,13 +7,14 @@
         everyone
       </p>
       <div class="actions">
-        <UButton onclick="window.location.href = '#getting-started'">
-          Getting Started <UIcon name="i-heroicons-arrow-right" />
+        <UButton>
+          <NuxtLink to="#getting-started">Getting Started</NuxtLink>
+          <UIcon name="i-heroicons-arrow-right" />
         </UButton>
       </div>
     </div>
     <div class="image">
-      <NuxtImg src="/images/logo.jpg"></NuxtImg>
+      <NuxtImg src="/images/logo.jpg" class="rounded-lg overflow-hidden" />
     </div>
   </div>
 </template>
