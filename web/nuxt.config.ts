@@ -1,4 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true }
+  ssr: true,
+  devtools: { enabled: true },
+  modules: ["@nuxt/ui", "@nuxt/image"],
+  components: true,
+  css: ['~/assets/css/main.css'],
 })
