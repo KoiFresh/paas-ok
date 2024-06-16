@@ -17,8 +17,10 @@
     </span>
     <div class="mt-6">
       <UButton>
-        <UIcon name="i-heroicons-cube" />
-        <NuxtLink to="/contact"> Contact Us</NuxtLink>
+        <NuxtLink to="/contact">
+          <UIcon name="i-heroicons-cube" />
+          Contact Us
+        </NuxtLink>
       </UButton>
     </div>
   </div>

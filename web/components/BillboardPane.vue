@@ -8,8 +8,10 @@
       </p>
       <div class="actions">
         <UButton>
-          <NuxtLink to="#getting-started">Getting Started</NuxtLink>
-          <UIcon name="i-heroicons-arrow-right" />
+          <NuxtLink to="#getting-started">
+            Getting Started
+            <UIcon name="i-heroicons-arrow-right" />
+          </NuxtLink>
         </UButton>
       </div>
     </div>
