@@ -16,12 +16,12 @@
       sit amet.
     </span>
     <div class="mt-6">
-      <UButton>
-        <NuxtLink to="/contact">
+      <NuxtLink to="/order">
+        <UButton>
           <UIcon name="i-heroicons-cube" />
           Contact Us
-        </NuxtLink>
-      </UButton>
+        </UButton>
+      </NuxtLink>
     </div>
   </div>
 </template>

@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const mode = useColorMode();
+const color = computed(() => (mode.value === "dark" ? "white" : "black"));
+</script>
+
 <template>
   <div class="content">
     <div class="headline">
@@ -7,16 +12,21 @@
         everyone
       </p>
       <div class="actions">
-        <UButton>
-          <NuxtLink to="#getting-started">
+        <NuxtLink to="#getting-started">
+          <UButton>
             Getting Started
             <UIcon name="i-heroicons-arrow-right" />
-          </NuxtLink>
-        </UButton>
+          </UButton>
+        </NuxtLink>
       </div>
     </div>
     <div class="image">
-      <NuxtImg src="/images/logo.jpg" class="rounded-lg overflow-hidden" />
+      <NuxtImg
+        format="webp"
+        :src="`/images/logo_454x454_${color}_free.png`"
+        class="rounded-lg overflow-hidden"
+        alt="Logo"
+      />
     </div>
   </div>
 </template>
