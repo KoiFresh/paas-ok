@@ -21,12 +21,7 @@ const color = computed(() => (mode.value === "dark" ? "white" : "black"));
       </div>
     </div>
     <div class="image">
-      <NuxtImg
-        format="webp"
-        :src="`/images/logo_454x454_${color}_free.png`"
-        class="rounded-lg overflow-hidden"
-        alt="Logo"
-      />
+      <OkLogo />
     </div>
   </div>
 </template>

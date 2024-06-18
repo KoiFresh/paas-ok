@@ -1,11 +1,11 @@
 <template>
   <div>
-    <BillboardPane />
+    <WelcomeHeader />
     <div class="sections">
-      <AboutUs />
-      <OurPrints />
-      <PricingInformationPane />
-      <GettingStartedPane />
+      <WelcomeAboutUs />
+      <WelcomeOurPrints />
+      <WelcomePricing />
+      <WelcomeGettingStarted />
     </div>
     <PageFooter />
   </div>
