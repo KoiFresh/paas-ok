@@ -321,6 +321,13 @@ aws-cdk-lib@^2.0.0:
     table "^6.8.2"
     yaml "1.10.2"
 
+aws-cdk-local@^2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/aws-cdk-local/-/aws-cdk-local-2.18.0.tgz#8aa1dc96f505561306fd0103011edb01bf083348"
+  integrity sha512-ZNQxs4GKHG2MC5y19MJZE/Xf/c0tAdjH6LWbZdouyG4k+1DeuFtBZ+UoYjoUfGPI8dycGpwUiewsLBY1lbtTWg==
+  dependencies:
+    diff "^5.0.0"
+
 aws-cdk@^2.146.0:
   version "2.146.0"
   resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.146.0.tgz#eda95c23b96ccd132086fabd2e7a086040cf6c22"
@@ -425,6 +432,11 @@ diff@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
+
+diff@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-5.2.0.tgz#26ded047cd1179b78b9537d5ef725503ce1ae531"
+  integrity sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==
 
 dir-glob@^3.0.1:
   version "3.0.1"
