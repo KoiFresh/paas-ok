@@ -1,29 +1,31 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { UploadLambda } from './lambdas/upload';
-import { StorageBucket } from './buckets/storage';
-import { Gateway } from './gateways/gateway';
-import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
+import { App, StackProps } from 'aws-cdk-lib';
+import * as cloud from './cloud';
 
-class PaasOkStack extends Stack {
-	constructor(scope: Construct, id: string, props?: StackProps) {
+class AwsStack extends cloud.Stack {
+	constructor(scope: App, id: string, props?: StackProps) {
 		super(scope, id);
-		// The code that defines your stack goes here
 
-		const storage = StorageBucket(this);
-		const upload = UploadLambda(this, {
-			bucket: storage
+		const api = new cloud.Api(this, { cors: true });
+		const bucket = new cloud.Bucket(this);
+		const table = new cloud.Table(this);
+
+		api.method("GET", "/upload", new cloud.Function(this, {
+			src: "../service/endpoints/upload/index.ts",
+			lockfile: "../service/yarn.lock",
+			environment: {
+				S3_BUCKET_NAME: bucket.bucketName,
+				DYNAMODB_TABLE_NAME: table.tableName,
+			},
+		}));
+
+		this.outputs({
+			"apiurl": api.url,
+			"s3bucketname": bucket.bucketName,
+			"dynamodbtablename": table.tableName,
 		});
-		const gateway = Gateway(this);
-		//gateway.root.addResource('upload').addMethod('POST', new LambdaIntegration(upload));
-		const paths = { test: gateway.root.addResource('test') };
-
-		paths.test.addMethod('GET', new LambdaIntegration(upload))
-		paths.test.addCorsPreflight({
-			allowOrigins: ['*'],
-		})
 	}
 }
 
 const app = new App();
-new PaasOkStack(app, 'PaasOkStack');
+const stack = new AwsStack(app, 'paas-ok-stack');
+stack.synth();

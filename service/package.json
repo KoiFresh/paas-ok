@@ -1,0 +1,13 @@
+{
+  "name": "service",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1645.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.140",
+    "typescript": "^5.4.5"
+  }
+}
