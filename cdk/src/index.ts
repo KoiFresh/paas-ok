@@ -9,9 +9,8 @@ class AwsStack extends cloud.Stack {
 		const bucket = new cloud.Bucket(this);
 		const table = new cloud.Table(this);
 
-		api.method("GET", "/upload", new cloud.Function(this, {
-			src: "../service/endpoints/upload/index.ts",
-			lockfile: "../service/yarn.lock",
+		api.method("GET", "/order", new cloud.Function(this, {
+			directory: "../service/functions/endpoints/order",
 			environment: {
 				S3_BUCKET_NAME: bucket.bucketName,
 				DYNAMODB_TABLE_NAME: table.tableName,
