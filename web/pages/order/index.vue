@@ -1,4 +1,53 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const config = useRuntimeConfig();
+
+const message = ref("");
+const email = ref("");
+const files = ref<File[]>([]);
+
+/**
+ * Called when the form is submitted
+ */
+async function onSubmit() {
+  const form = new FormData();
+  form.append("email", email.value);
+  form.append("message", message.value);
+  for (const file of files.value) {
+    form.append("files", file, file.name);
+  }
+
+  try {
+    const result = await fetch(`${config.public.apiBaseUrl}/order`, {
+      method: "POST",
+      body: form,
+    });
+
+    if (!result.ok) {
+      alert("Oops, something went wrong!");
+    }
+  } catch (error) {
+    alert(`Oops, something went wrong! ${error}`);
+  }
+}
+
+/**
+ * Called when the uploaded files changed
+ * @param event FileList
+ */
+function onFilesChanged(event: FileList) {
+  const uploads: File[] = [];
+
+  for (let i = 0; i < event.length; i++) {
+    const file = event.item(i);
+    if (!file) {
+      continue;
+    }
+    uploads.push(file);
+  }
+
+  files.value = uploads;
+}
+</script>
 
 <template>
   <div>
@@ -10,12 +59,14 @@
     </div>
     <div class="form">
       <UTextarea
+        v-model="message"
         variant="outline"
         color="primary"
         placeholder="Deine Nachricht"
         :rows="7"
       />
       <UInput
+        v-model="email"
         variant="outline"
         color="primary"
         placeholder="Email"
@@ -28,9 +79,14 @@
         type="file"
         multiple
         icon="i-heroicons-folder"
+        @change="onFilesChanged"
       />
       <div class="submit">
-        <UButton>Drucken <Icon name="i-heroicons-printer" /></UButton>
+        <UButton
+          @click="onSubmit"
+          :disabled="!message || !email || !files.length"
+          >Drucken <Icon name="i-heroicons-printer"
+        /></UButton>
       </div>
     </div>
   </div>

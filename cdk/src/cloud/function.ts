@@ -8,7 +8,7 @@ class Function extends NodejsFunction {
 	static named = id('function');
 
 	constructor(stack: Stack, args: {
-		id?: string, directory: string, environment?: { [key: string]: string }
+		id?: string, directory: string, environment?: { [key: string]: string }, permissions?: (func: Function) => void
 	}) {
 		super(stack, args.id ?? Function.named.id(), {
 			entry: `${args.directory}/index.ts`,
@@ -16,6 +16,8 @@ class Function extends NodejsFunction {
 			depsLockFilePath: `${args.directory}/yarn.lock`,
 			environment: args.environment,
 		});
+
+		args.permissions?.(this);
 	}
 
 	public asIntegration(): AwsIntegration {

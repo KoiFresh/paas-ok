@@ -5,4 +5,9 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui", "@nuxt/image"],
   components: true,
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: ""
+    }
+  }
 })

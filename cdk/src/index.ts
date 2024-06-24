@@ -8,13 +8,20 @@ class AwsStack extends cloud.Stack {
 		const api = new cloud.Api(this, { cors: true });
 		const bucket = new cloud.Bucket(this);
 		const table = new cloud.Table(this);
+		const queue = new cloud.Queue(this);
 
-		api.method("GET", "/order", new cloud.Function(this, {
+		api.method("POST", "/order", new cloud.Function(this, {
 			directory: "../service/functions/endpoints/order",
 			environment: {
 				S3_BUCKET_NAME: bucket.bucketName,
 				DYNAMODB_TABLE_NAME: table.tableName,
+				QUEUE_URL: queue.queueUrl,
 			},
+			permissions: (self) => {
+				bucket.grantReadWrite(self);
+				table.grantReadWriteData(self);
+				queue.grantSendMessages(self);
+			}
 		}));
 
 		this.outputs({

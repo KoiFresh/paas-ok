@@ -1,5 +1,4 @@
 import * as cdk from "aws-cdk-lib";
-import { v4 as uuidv4 } from "uuid";
 import { id } from "../utils/id";
 
 class Table extends cdk.aws_dynamodb.Table {
