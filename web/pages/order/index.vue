@@ -1,16 +1,18 @@
 <script setup lang="ts">
-const config = useRuntimeConfig();
-
-const message = ref("");
-const email = ref("");
 const files = ref<File[]>([]);
 
 const result = ref<RemoteSlicerResult | null>(null);
+const warning = ref<string | null>(null);
 const { slice, isSlicing } = useRemoteSlicer();
 
 async function onSlice() {
   result.value = null;
-  result.value = await slice(files.value[0]);
+  warning.value = null;
+  try {
+    result.value = await slice(files.value[0]);
+  } catch (error) {
+    warning.value = String(error);
+  }
 }
 
 /**
@@ -19,6 +21,7 @@ async function onSlice() {
  */
 function onFilesChanged(event: FileList) {
   result.value = null;
+  warning.value = null;
   const uploads: File[] = [];
 
   for (let i = 0; i < event.length; i++) {
@@ -56,20 +59,14 @@ function onFilesChanged(event: FileList) {
         <UBadge :label="`Preis: ${result.price} €`" />
         <UBadge :label="`Material: ${result.material}`" />
       </div>
-      <!--<UTextarea
-        v-model="message"
-        variant="outline"
-        color="primary"
-        placeholder="Deine Nachricht"
-        :rows="7"
-      />
       <UInput
-        v-model="email"
-        variant="outline"
-        color="primary"
-        placeholder="Email"
-        icon="i-heroicons-at-symbol"
-      />-->
+        v-if="warning"
+        color="red"
+        :ui="{ color: 'red' }"
+        :value="warning"
+        readonly
+        icon="i-heroicons-exclamation-triangle"
+      />
       <div class="submit">
         <UButton
           @click="onSlice"

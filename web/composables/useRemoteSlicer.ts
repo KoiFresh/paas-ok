@@ -17,7 +17,10 @@ function useRemoteSlicer() {
 			});
 
 			return response.json();
-		} finally {
+		} catch (error) {
+			throw "An error occurred while slicing the file. Try again later."
+		}
+		finally {
 			isSlicing.value = false;
 		}
 	}
