@@ -58,6 +58,7 @@ function onFilesChanged(event: FileList) {
       </h1>
     </div>
     <div class="form">
+      <OrderPreview :files="files" />
       <UTextarea
         v-model="message"
         variant="outline"
@@ -77,7 +78,7 @@ function onFilesChanged(event: FileList) {
         color="primary"
         placeholder="Name"
         type="file"
-        multiple
+        accept=".stl"
         icon="i-heroicons-folder"
         @change="onFilesChanged"
       />
