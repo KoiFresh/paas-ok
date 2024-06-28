@@ -5,29 +5,12 @@ const message = ref("");
 const email = ref("");
 const files = ref<File[]>([]);
 
-/**
- * Called when the form is submitted
- */
-async function onSubmit() {
-  const form = new FormData();
-  form.append("email", email.value);
-  form.append("message", message.value);
-  for (const file of files.value) {
-    form.append("files", file, file.name);
-  }
+const result = ref<RemoteSlicerResult | null>(null);
+const { slice, isSlicing } = useRemoteSlicer();
 
-  try {
-    const result = await fetch(`${config.public.apiBaseUrl}/order`, {
-      method: "POST",
-      body: form,
-    });
-
-    if (!result.ok) {
-      alert("Oops, something went wrong!");
-    }
-  } catch (error) {
-    alert(`Oops, something went wrong! ${error}`);
-  }
+async function onSlice() {
+  result.value = null;
+  result.value = await slice(files.value[0]);
 }
 
 /**
@@ -35,6 +18,7 @@ async function onSubmit() {
  * @param event FileList
  */
 function onFilesChanged(event: FileList) {
+  result.value = null;
   const uploads: File[] = [];
 
   for (let i = 0; i < event.length; i++) {
@@ -59,7 +43,20 @@ function onFilesChanged(event: FileList) {
     </div>
     <div class="form">
       <OrderPreview :files="files" />
-      <UTextarea
+      <UProgress v-if="isSlicing" animation="carousel" />
+      <UInput
+        variant="outline"
+        color="primary"
+        type="file"
+        accept=".stl"
+        icon="i-heroicons-folder"
+        @change="onFilesChanged"
+      />
+      <div v-if="result" class="gap-1 flex">
+        <UBadge :label="`Preis: ${result.price} €`" />
+        <UBadge :label="`Material: ${result.material}`" />
+      </div>
+      <!--<UTextarea
         v-model="message"
         variant="outline"
         color="primary"
@@ -72,22 +69,14 @@ function onFilesChanged(event: FileList) {
         color="primary"
         placeholder="Email"
         icon="i-heroicons-at-symbol"
-      />
-      <UInput
-        variant="outline"
-        color="primary"
-        placeholder="Name"
-        type="file"
-        accept=".stl"
-        icon="i-heroicons-folder"
-        @change="onFilesChanged"
-      />
+      />-->
       <div class="submit">
         <UButton
-          @click="onSubmit"
-          :disabled="!message || !email || !files.length"
-          >Drucken <Icon name="i-heroicons-printer"
-        /></UButton>
+          @click="onSlice"
+          :disabled="!files.length || isSlicing || !!result"
+        >
+          Slice <Icon name="i-heroicons-square-3-stack-3d" />
+        </UButton>
       </div>
     </div>
   </div>
