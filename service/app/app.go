@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/paas-ok/service/slicers"
 )
@@ -33,7 +34,7 @@ func (app *App) Run(host string, port int) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	server := &http.Server{
 		Addr:         addr,
-		Handler:      app.router,
+		Handler:      handlers.CORS()(app.router),
 		WriteTimeout: 5 * time.Minute,
 		ReadTimeout:  5 * time.Minute,
 	}
