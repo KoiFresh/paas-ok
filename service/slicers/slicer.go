@@ -49,7 +49,7 @@ func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.
 
 	return &SliceResult{
 		Price:    price,
-		Material: material.Name,
+		Material: material.Type,
 		Files:    filenames,
 	}, nil
 }

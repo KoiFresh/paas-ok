@@ -18,3 +18,21 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=Host(`localhost`) || Host(`prints.mayer.sh`)"
+
+  service:
+    build: ./service
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.service.rule=Host(`api.localhost`) || Host(`api.prints.mayer.sh`)"
+
+  mariadb:
+    image: mariadb:10.5
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: paas
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
