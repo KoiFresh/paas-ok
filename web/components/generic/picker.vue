@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const propeties = defineProps<{
+  disabled?: boolean;
   options: {
     label: string;
     value: string;
@@ -13,6 +14,7 @@ const value = defineModel<string>();
   <div class="flex flex-wrap gap-1 mx-5">
     <UButton
       v-for="item in propeties.options"
+      :disabled="propeties.disabled"
       :variant="item.value == value ? 'solid' : 'outline'"
       @click="value = item.value"
     >

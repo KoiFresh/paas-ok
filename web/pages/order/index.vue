@@ -52,7 +52,7 @@ async function onSlice() {
       <GenericCadPreview :files="files" :color="options.color" />
       <UProgress v-if="progress" animation="carousel" />
       <FileInput v-model="files" />
-      <GenericCadOptions v-model="options" />
+      <GenericCadOptions v-model="options" :disabled="progress" />
 
       <div v-if="result" class="gap-1 flex">
         <UBadge :label="`Preis: ${result.price} €`" />
