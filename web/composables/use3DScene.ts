@@ -9,6 +9,7 @@ function use3DScene() {
 		camera: THREE.PerspectiveCamera,
 		controls: OrbitControls,
 		scene: THREE.Scene,
+		color: string,
 	} | null>();
 
 	const loaders = {
@@ -27,6 +28,7 @@ function use3DScene() {
 			camera: camera,
 			controls: controls,
 			scene: scene,
+			color: "red",
 		};
 
 		function animate() {
@@ -57,7 +59,9 @@ function use3DScene() {
 
 		stage.value.scene.clear();
 
-		const material = new THREE.MeshPhongMaterial({});
+		const material = new THREE.MeshPhongMaterial({
+			color: stage.value.color,
+		});
 		const obj = new THREE.Mesh(geometry, material);
 		obj.rotateX((-Math.PI * 2 * 1) / 4);
 		stage.value.scene.add(obj);
@@ -99,6 +103,20 @@ function use3DScene() {
 		stage.value.camera.position.x = pos;
 	}
 
+	function setColor(color: string) {
+		if (!stage.value) {
+			return;
+		}
+		stage.value.color = color;
+
+
+		stage.value.scene.children.forEach((obj) => {
+			if (obj instanceof THREE.Mesh) {
+				obj.material.color.set(color);
+			}
+		});
+	}
+
 	function clear() {
 		if (!stage.value) {
 			return;
@@ -111,6 +129,7 @@ function use3DScene() {
 		setCanvas: setCanvas,
 		setSize: setSize,
 		setObject: setObject,
+		setColor: setColor,
 		loaders: loaders,
 		clear: clear,
 	};

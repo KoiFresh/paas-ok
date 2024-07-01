@@ -5,6 +5,7 @@ const scene = use3DScene();
 
 const properties = defineProps<{
   files: File[];
+  color: string;
 }>();
 
 function resize() {
@@ -13,6 +14,13 @@ function resize() {
     container.value!.getBoundingClientRect().height
   );
 }
+
+watch(
+  () => properties.color,
+  (color) => {
+    scene.setColor(color);
+  }
+);
 
 watch(
   () => properties.files,

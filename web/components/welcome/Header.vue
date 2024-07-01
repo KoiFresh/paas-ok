@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const mode = useColorMode();
-const color = computed(() => (mode.value === "dark" ? "white" : "black"));
 </script>
 
 <template>
@@ -21,7 +20,7 @@ const color = computed(() => (mode.value === "dark" ? "white" : "black"));
       </div>
     </div>
     <div class="image">
-      <OkLogo />
+      <GenericLogo />
     </div>
   </div>
 </template>

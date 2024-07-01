@@ -1,77 +1,65 @@
 <script setup lang="ts">
 const files = ref<File[]>([]);
-
 const result = ref<RemoteSlicerResult | null>(null);
-const warning = ref<string | null>(null);
-const { slice, isSlicing } = useRemoteSlicer();
-
-async function onSlice() {
-  result.value = null;
-  warning.value = null;
-  try {
-    result.value = await slice(files.value[0]);
-  } catch (error) {
-    warning.value = String(error);
-  }
-}
+const toast = useToast();
+const options = ref<SliceOptions>({
+  color: "red",
+  material: "pla",
+  infill: 30,
+  quality: "low",
+});
+const { slice, progress } = useRemoteSlicer();
 
 /**
- * Called when the uploaded files changed
- * @param event FileList
+ * Called when the uploaded files changed. Resets the slicing result.
  */
-function onFilesChanged(event: FileList) {
+watch(files, () => (result.value = null));
+watch(
+  () =>
+    options.value.color +
+    options.value.material +
+    options.value.infill +
+    options.value.quality,
+  () => (result.value = null)
+);
+const ready = computed(
+  () => files.value.length && !result.value && !progress.value
+);
+
+/**
+ * Called when the slice button is clicked. Slices the uploaded file.
+ */
+async function onSlice() {
   result.value = null;
-  warning.value = null;
-  const uploads: File[] = [];
-
-  for (let i = 0; i < event.length; i++) {
-    const file = event.item(i);
-    if (!file) {
-      continue;
-    }
-    uploads.push(file);
+  try {
+    result.value = await slice(files.value[0], options.value);
+  } catch (error) {
+    toast.add({
+      title: "Warning",
+      description: String(error),
+      icon: "i-heroicons-exclamation-triangle",
+      color: "yellow",
+      timeout: 10000,
+    });
   }
-
-  files.value = uploads;
 }
 </script>
 
 <template>
   <div>
-    <div>
-      <h1>
-        <OkLogo class="logo" />
-        Print Everything, Everywhere all at once!
-      </h1>
-    </div>
+    <GenericHeadline />
     <div class="form">
-      <OrderPreview :files="files" />
-      <UProgress v-if="isSlicing" animation="carousel" />
-      <UInput
-        variant="outline"
-        color="primary"
-        type="file"
-        accept=".stl"
-        icon="i-heroicons-folder"
-        @change="onFilesChanged"
-      />
+      <GenericCadPreview :files="files" :color="options.color" />
+      <UProgress v-if="progress" animation="carousel" />
+      <FileInput v-model="files" />
+      <GenericCadOptions v-model="options" />
+
       <div v-if="result" class="gap-1 flex">
         <UBadge :label="`Preis: ${result.price} €`" />
         <UBadge :label="`Material: ${result.material}`" />
       </div>
-      <UInput
-        v-if="warning"
-        color="red"
-        :ui="{ color: 'red' }"
-        :value="warning"
-        readonly
-        icon="i-heroicons-exclamation-triangle"
-      />
       <div class="submit">
-        <UButton
-          @click="onSlice"
-          :disabled="!files.length || isSlicing || !!result"
-        >
+        <UButton @click="onSlice" :disabled="!ready">
           Slice <Icon name="i-heroicons-square-3-stack-3d" />
         </UButton>
       </div>
@@ -80,18 +68,6 @@ function onFilesChanged(event: FileList) {
 </template>
 
 <style scoped>
-h1 {
-  font-size: x-large;
-  margin: 1em 0;
-}
-
-.logo {
-  display: inline-block;
-  height: 2em;
-  margin-top: -3px;
-  margin-left: -11px;
-}
-
 .form {
   display: flex;
   flex-direction: column;
