@@ -1,6 +1,7 @@
 package cura
 
 import (
+	"fmt"
 	"log/slog"
 	"os/exec"
 	"path"
@@ -31,7 +32,7 @@ func (output output) parse() (int64, int64, error) {
 	return printtime, filament, nil
 }
 
-func (engine *Engine) Slice(file string) (*slicers.EngineSliceResult, error) {
+func (engine *Engine) Slice(file string, options slicers.EngineSliceOptions) (*slicers.EngineSliceResult, error) {
 	slog.Debug("Start slicing", "file", file, "time", time.Now())
 
 	cmd := exec.Command(
@@ -41,6 +42,7 @@ func (engine *Engine) Slice(file string) (*slicers.EngineSliceResult, error) {
 		"-j", path.Join(engine.basepath, "resources/definitions/fdmprinter.def.json"),
 		"-j", path.Join(engine.basepath, "resources/definitions/fdmextruder.def.json"),
 		"-l", file,
+		"-s", fmt.Sprintf("infill_line_distance=%f", (0.04*100)/float64(options.Infill)),
 		"-o", "/dev/null",
 	)
 

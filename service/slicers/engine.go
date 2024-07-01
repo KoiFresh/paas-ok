@@ -6,6 +6,10 @@ import (
 	"github.com/paas-ok/service/materials"
 )
 
+type EngineSliceOptions struct {
+	Infill int
+}
+
 type EngineSliceResult struct {
 	FileName       string `json:"filename"`
 	PrintTime      int64  `json:"printtime"`
@@ -13,7 +17,7 @@ type EngineSliceResult struct {
 }
 
 type Engine interface {
-	Slice(path string) (*EngineSliceResult, error)
+	Slice(path string, options EngineSliceOptions) (*EngineSliceResult, error)
 }
 
 func (result *EngineSliceResult) price(material materials.Material) float64 {

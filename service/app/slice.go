@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/paas-ok/service/materials"
 )
@@ -21,9 +22,16 @@ func (app *App) Slice(res http.ResponseWriter, req *http.Request) {
 	}
 
 	files := req.MultipartForm.File["files"]
+	infill, err := strconv.ParseInt(req.MultipartForm.Value["infill"][0], 10, 32)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	results, err := app.slicer.Slice(
 		files,
 		materials.PLA(),
+		int(infill),
 	)
 
 	if err != nil {
