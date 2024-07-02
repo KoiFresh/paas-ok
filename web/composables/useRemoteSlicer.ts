@@ -14,19 +14,20 @@ function useRemoteSlicer() {
 		form.append('material', options.material);
 		form.append('infill', options.infill.toFixed(0));
 
-		try {
-			const response = await fetch(`${config.public.apiBaseUrl}/cura:slice`, {
-				method: 'POST',
-				body: form
-			});
-
-			return response.json();
-		} catch (error) {
+		const response = await fetch(`${config.public.apiBaseUrl}/cura:slice`, {
+			method: 'POST',
+			body: form
+		}).catch(() => {
 			throw "An error occurred while slicing the file. Try again later."
-		}
-		finally {
+		}).finally(() => {
 			progress.value = false;
+		});
+
+		if (!response.ok) {
+			throw await response.text();
 		}
+
+		return response.json();
 	}
 
 	return { slice, progress };

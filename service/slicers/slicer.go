@@ -18,7 +18,7 @@ func New(engine Engine) *Slicer {
 	}
 }
 
-func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.Material, infill int) (*SliceResult, error) {
+func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.Material, options map[Option]string) (*SliceResult, error) {
 	dir, err := os.MkdirTemp("", "paas-ok-slicer-*")
 	if err != nil {
 		return nil, err
@@ -38,13 +38,13 @@ func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.
 			return nil, err
 		}
 
-		result, err := slicer.engine.Slice(path, EngineSliceOptions{Infill: infill})
+		result, err := slicer.engine.Slice(path, options)
 		if err != nil {
 			return nil, err
 		}
 
 		results[index] = result
-		price += result.price(material)
+		price += result.Cost
 	}
 
 	return &SliceResult{

@@ -5,7 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/paas-ok/service/app"
-	"github.com/paas-ok/service/cura"
+	"github.com/paas-ok/service/prusaslicer"
 	"github.com/paas-ok/service/slicers"
 )
 
@@ -27,7 +27,7 @@ func main() {
 	flag.Parse()
 
 	app := app.New()
-	if engine := cura.NewEngine(fcura, fdir); engine != nil {
+	if engine := prusaslicer.New(fcura); engine != nil {
 		slicer := slicers.New(engine)
 		app.WithSlicer(slicer)
 	}
