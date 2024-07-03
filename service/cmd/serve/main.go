@@ -1,36 +1,23 @@
 package main
 
 import (
-	"flag"
 	"log/slog"
 
 	"github.com/paas-ok/service/app"
+	"github.com/paas-ok/service/environment"
 	"github.com/paas-ok/service/prusaslicer"
 	"github.com/paas-ok/service/slicers"
 )
 
 func main() {
 	slog.SetLogLoggerLevel(slog.LevelDebug)
-
-	var fcura string
-	flag.StringVar(&fcura, "cura", "CuraEngine", "The CureEngine binary path")
-
-	var fport int
-	flag.IntVar(&fport, "port", 8080, "The port to listen on")
-
-	var fhost string
-	flag.StringVar(&fhost, "host", "0.0.0.0", "The host to listen on")
-
-	var fdir string
-	flag.StringVar(&fdir, "config", "", "The directory used for configuration files")
-
-	flag.Parse()
+	env := environment.Get()
 
 	app := app.New()
-	if engine := prusaslicer.New(fcura); engine != nil {
+	if engine := prusaslicer.New(*env.Slicer); engine != nil {
 		slicer := slicers.New(engine)
 		app.WithSlicer(slicer)
 	}
 
-	app.Run(fhost, fport)
+	app.Run(*env.Host, env.Port)
 }

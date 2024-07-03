@@ -4,8 +4,6 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
-
-	"github.com/paas-ok/service/materials"
 )
 
 type Slicer struct {
@@ -18,19 +16,19 @@ func New(engine Engine) *Slicer {
 	}
 }
 
-func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.Material, options map[Option]string) (*SliceResult, error) {
+func (slicer *Slicer) SliceWithOptions(headers []*multipart.FileHeader, options map[Option]string) (*SliceResult, error) {
 	dir, err := os.MkdirTemp("", "paas-ok-slicer-*")
 	if err != nil {
 		return nil, err
 	}
 	defer os.RemoveAll(dir)
 
-	filenames := make([]string, len(headers))
-	results := make([]*EngineSliceResult, len(headers))
-	price := 0.0
+	result := &SliceResult{
+		Price: 0.0,
+		Files: []Metadata{},
+	}
 
-	for index, header := range headers {
-		filenames[index] = header.Filename
+	for _, header := range headers {
 		path := filepath.Join(dir, header.Filename)
 
 		f := File{Header: header}
@@ -38,18 +36,14 @@ func (slicer *Slicer) Slice(headers []*multipart.FileHeader, material materials.
 			return nil, err
 		}
 
-		result, err := slicer.engine.Slice(path, options)
+		metadata, err := slicer.engine.SliceWithOptions(path, options)
 		if err != nil {
 			return nil, err
 		}
 
-		results[index] = result
-		price += result.Cost
+		result.Files = append(result.Files, *metadata)
+		result.Price += metadata.Cost
 	}
 
-	return &SliceResult{
-		Price:    price,
-		Material: material.Type,
-		Files:    filenames,
-	}, nil
+	return result, nil
 }

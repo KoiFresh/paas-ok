@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/paas-ok/service/materials"
 	"github.com/paas-ok/service/multipart"
+	"github.com/paas-ok/service/profile"
 	"github.com/paas-ok/service/slicers"
 )
 
@@ -51,11 +51,21 @@ func (app *App) Slice(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	options[slicers.OptionProfile] = fmt.Sprintf("%s_%s.ini", material, quality)
 
-	results, err := app.slicer.Slice(
+	profile, err := profile.NewBuilder().
+		Basepath("resources/profiles").
+		Filament(material).
+		Quality(quality).
+		Build()
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	options[slicers.OptionProfile] = profile.Filepath
+
+	results, err := app.slicer.SliceWithOptions(
 		files,
-		materials.PLA(),
 		options,
 	)
 

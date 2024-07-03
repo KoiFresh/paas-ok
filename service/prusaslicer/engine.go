@@ -19,14 +19,6 @@ type engine struct {
 	binary string
 }
 
-type metadata struct {
-	printtime   time.Duration
-	weight      float64
-	filament    string
-	filldensity float64
-	cost        float64
-}
-
 func New(binary string) slicers.Engine {
 	if len(strings.Trim(binary, " ")) == 0 {
 		return nil
@@ -44,7 +36,7 @@ func New(binary string) slicers.Engine {
 
 }
 
-func (prusa *engine) Slice(file string, options map[slicers.Option]string) (*slicers.EngineSliceResult, error) {
+func (prusa *engine) SliceWithOptions(file string, options map[slicers.Option]string) (*slicers.Metadata, error) {
 	starttime := time.Now()
 	slog.Debug("Start slicing", "file", file, "time", time.Now())
 
@@ -61,7 +53,7 @@ func (prusa *engine) Slice(file string, options map[slicers.Option]string) (*sli
 	for key, value := range options {
 		switch key {
 		case slicers.OptionProfile:
-			arguments = append(arguments, "--load", fmt.Sprintf("resources/profiles/%s", value))
+			arguments = append(arguments, "--load", value)
 		default:
 			arguments = append(arguments, fmt.Sprintf("%s=%s", key, value))
 		}
@@ -81,20 +73,17 @@ func (prusa *engine) Slice(file string, options map[slicers.Option]string) (*sli
 	endtime := time.Now()
 	slog.Debug("Finished slicing", "file", file, "time", time.Now(), "duration", endtime.Sub(starttime))
 
-	sliceResultMetaData, err := prusa.parseMetadataFromGCode(outputFilePath)
+	metadata, err := prusa.parseMetadataFromGCode(outputFilePath)
+	metadata.Filename = filepath.Base(file)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return &slicers.EngineSliceResult{
-		FileName:  filepath.Base(file),
-		PrintTime: int64(sliceResultMetaData.printtime.Seconds()),
-		Filament:  sliceResultMetaData.filament,
-		Cost:      sliceResultMetaData.cost,
-	}, nil
+	return metadata, nil
 }
 
-func (prusa *engine) parseMetadataFromGCode(filename string) (*metadata, error) {
+func (prusa *engine) parseMetadataFromGCode(filename string) (*slicers.Metadata, error) {
 	buffer, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -127,12 +116,13 @@ func (prusa *engine) parseMetadataFromGCode(filename string) (*metadata, error) 
 		return nil, err
 	}
 
-	return &metadata{
-		printtime:   printtime,
-		weight:      weight,
-		filament:    filament,
-		filldensity: filldensity,
-		cost:        cost,
+	return &slicers.Metadata{
+		Filename:    filepath.Base(filename),
+		Printtime:   printtime,
+		Weight:      weight,
+		Filament:    filament,
+		Filldensity: filldensity,
+		Cost:        cost,
 	}, nil
 }
 

@@ -1,9 +1,5 @@
 package slicers
 
-type EngineSliceOptions struct {
-	Infill int
-}
-
 type EngineSliceResult struct {
 	FileName  string  `json:"filename"`
 	PrintTime int64   `json:"printtime"`
@@ -12,7 +8,7 @@ type EngineSliceResult struct {
 }
 
 type Engine interface {
-	Slice(path string, options map[Option]string) (*EngineSliceResult, error)
+	SliceWithOptions(path string, options map[Option]string) (*Metadata, error)
 }
 
 /*func (result *EngineSliceResult) price(material materials.Material) float64 {

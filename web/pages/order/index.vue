@@ -56,7 +56,9 @@ async function onSlice() {
 
       <div v-if="result" class="gap-1 flex">
         <UBadge :label="`Preis: ${result.price} €`" />
-        <UBadge :label="`Material: ${result.material}`" />
+        <UBadge
+          :label="`Material: ${result.files.map((f) => f.filament).join(', ')}`"
+        />
       </div>
       <div class="submit">
         <UButton @click="onSlice" :disabled="!ready">
