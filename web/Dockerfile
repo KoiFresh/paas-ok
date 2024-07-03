@@ -5,10 +5,9 @@ COPY . /app
 WORKDIR /app
 RUN bun install && bun run build
 
-FROM base as runner
+FROM node:22-alpine
 EXPOSE 3000
 COPY --from=builder /app/.output /app/.output
 WORKDIR /app
 
-ENTRYPOINT [ "bun" ]
-CMD [ "run", "./.output/server/index.mjs" ]
+CMD [ "./.output/server/index.mjs" ]

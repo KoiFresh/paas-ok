@@ -44,7 +44,7 @@ func (prusa *engine) SliceWithOptions(file string, options map[slicers.Option]st
 	arguments := []string{
 		"--slice",
 		//		"--load", path.Join("resources/profiles/default.ini"),
-		"--binary-gcode=0",
+		//"--binary-gcode=0",
 		"--fill-density=99%",
 		"--export-gcode",
 		"--output", outputFilePath,

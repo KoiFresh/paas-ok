@@ -1,9 +1,12 @@
 package slicers
 
 import (
+	"math"
 	"mime/multipart"
 	"os"
 	"path/filepath"
+
+	"github.com/paas-ok/service/environment"
 )
 
 type Slicer struct {
@@ -45,5 +48,7 @@ func (slicer *Slicer) SliceWithOptions(headers []*multipart.FileHeader, options 
 		result.Price += metadata.Cost
 	}
 
+	result.Price += *environment.Get().BasePrice
+	result.Price = math.Ceil(result.Price*100) / 100 // Round to 2 decimal places
 	return result, nil
 }
