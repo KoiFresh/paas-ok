@@ -6,7 +6,15 @@
 
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
-   directory: "/"
-   schedule:
-     interval: weekly
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+  - package-ecosystem: "gomod"
+    directory: "/service"
+    schedule:
+      interval: daily
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "daily"
